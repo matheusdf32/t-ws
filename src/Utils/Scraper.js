@@ -95,7 +95,7 @@ export default class Scraper {
 
   async scrapeRecursive(hrefs) {
     const regex = new RegExp('.*/', 'g')
-    if (Array.isArray(hrefs)) {
+    if (Array.isArray(hrefs)) { 
       for (const href of hrefs) {
         this.scrapeRecursive(href)
       }
