@@ -100,24 +100,24 @@ export default class Scraper {
 
   async scrapeRecursive(hrefs) {
     const regex = new RegExp('.*/', 'g')
-   
-      for (const href of hrefs) {
-        const fileInfo = await this.scrapeToken(hrefs)
-        if (Array.isArray(fileInfo)) {
-          this.scrapeRecursive(href)
-        } else {
-          this.scrapeList.push({ fileName: fileInfo })
-        }
+
+    for (const href of hrefs) {
+      const fileInfo = await this.scrapeToken(hrefs)
+      if (Array.isArray(fileInfo)) {
+        this.scrapeRecursive(href)
+      } else {
+        this.scrapeList.push({ fileName: fileInfo })
       }
-      // let fileName = hrefs.replace(regex, '').split('.')
-      // const fileExtension = fileName[fileName.length - 1]
-      // const fileInfo = await this.scrapeToken(hrefs)
-      // this.scrapeList.push({ fileName: fileInfo })
-      // if (!this.extensions[fileExtension]) this.extensions[fileExtension] = fileInfo
-      // else {
-      //   this.extensions[fileExtension].size += fileInfo.size
-      //   this.extensions[fileExtension].lines += fileInfo.lines
-      // }
+    }
+    // let fileName = hrefs.replace(regex, '').split('.')
+    // const fileExtension = fileName[fileName.length - 1]
+    // const fileInfo = await this.scrapeToken(hrefs)
+    // this.scrapeList.push({ fileName: fileInfo })
+    // if (!this.extensions[fileExtension]) this.extensions[fileExtension] = fileInfo
+    // else {
+    //   this.extensions[fileExtension].size += fileInfo.size
+    //   this.extensions[fileExtension].lines += fileInfo.lines
+    // }
   }
 
   // async scrapeRecursive(hrefs) {
@@ -146,15 +146,20 @@ export default class Scraper {
   async buildScrapeList(repository) { // repository = href singular
     const html = await this.getHtml(repository)
     const hrefs = await this.getHREFS(html)
+    const list = []
     // return {hrefs, repository}
     if (hrefs) {
-      return hrefs
+      for (const href of hrefs) {
+        list.push(await this.buildScrapeList(href))
+      }
     } else {
+      console.log(repository)
       const regex = new RegExp('.*/', 'g')
       let fileName = repository.replace(regex, '').split('.')
       const fileExtension = fileName[fileName.length - 1]
-      return { ...this.getFileInfo(html), ext: fileExtension } // {ext: 'py', size: 15441, lines: 154}
+      list.push({[fileExtension]: { ...this.getFileInfo(html) }})  // {ext: 'py', size: 15441, lines: 154}
     }
+    return list
   }
 
   async scrape() {
@@ -163,7 +168,7 @@ export default class Scraper {
     // const hrefs = await this.getHREFS(html)
     // const tokens = await this.getTokens(hrefs)
     // console.log(hrefs);
-    const teste = await this.scrapeRecursive(hrefs)
+    const teste = await this.buildScrapeList(this.repository)
     return teste
     return this.scrapeList
     return this.extensions
@@ -174,8 +179,10 @@ export default class Scraper {
     // 92 : /(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">\s*)(\S.*?)(?= lines)/
     const regex = new RegExp(/(?<=<div class="Box-header py-2 d-flex flex-column flex-shrink-0 flex-md-row flex-md-items-center">\s*)\S.*?(?<=div>)/, 'gs')
     const div = html.match(regex)[0]
-    const lines = Number(div.match(/(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">\s*)(\S.*?)(?= lines)/gs)[0]);
-    const size = this.getSizeInBytes(div.match(/(?<=.*<span class="file-info-divider"><\/span>\s*)\S.*?(?<=(.B).*)/gs)[0]);
+    const linesMatch = div.match(/(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">\s*)(\S.*?)(?= lines)/gs)
+    const lines = Number(linesMatch ? linesMatch[0] : 0);
+    const sizeMatch = div.match(/(?<=.*<span class="file-info-divider"><\/span>\s*)\S.*?(?<=(.B).*)/gs)
+    const size = sizeMatch ? this.getSizeInBytes(sizeMatch[0]) : 0;
     return { size, lines }
   }
 
