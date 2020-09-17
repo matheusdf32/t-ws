@@ -6,8 +6,11 @@ const app = express()
 app.get('/', async (req, res) => {
 
   if (!req.query.repository) return res.json({
-    tutorial: 'use a get query named repository to pass the public github repository url',
-    example: '?repository=matheusdf32/spotify-finder'
+    tutorial: 'use a get query named \'repository\' to pass the public github repository url(or folder)',
+    examples:[ 
+      '?repository=matheusdf32/spotify-finder',
+      '?repository=Rocketseat/react-native-template-rocketseat-basic/tree/master/src'
+    ]
   })
   const scraper = new Scraper(req.query.repository)
   let result = await scraper.scrape()

@@ -114,8 +114,8 @@ export default class Scraper {
         this.extensions[fileExtension] = { ...this.getFileInfo(html) }
       else {
         const temp = { ...this.getFileInfo(html) }
-        this.extensions[fileExtension].size = temp.size
-        this.extensions[fileExtension].lines = temp.lines
+        this.extensions[fileExtension].size += temp.size
+        this.extensions[fileExtension].lines += temp.lines
       }
       // this.scrapeList.push({ [fileExtension]: { ...this.getFileInfo(html) } })  // {ext: 'py', size: 15441, lines: 154}
     }
@@ -135,7 +135,7 @@ export default class Scraper {
     const div = html.match(regex)[0]
     const linesMatch = div.match(/(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">.*><\/span>\s*)(\d)*(?= lines)|(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">\s*)(\d.*)(?= lines)/gs)
     const lines = Number(linesMatch ? linesMatch[0] : 0);
-    const sizeMatch = div.match(/(?<=.*><\/span>\s*)(\d|\.)*( .?B)/gs)
+    const sizeMatch = div.match(/(?<=.*>\s*)(\d|\.)*( .?B)/gs)
     const size = sizeMatch ? this.getSizeInBytes(sizeMatch[0]) : 0;
     return { size, lines }
   }
