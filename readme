@@ -1,0 +1,1 @@
+execute: nodemon --experimental-modules server.js
