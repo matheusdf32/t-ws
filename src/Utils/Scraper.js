@@ -88,28 +88,36 @@ export default class Scraper {
     if (hrefs) {
       return hrefs
     } else {
-      return this.getFileInfo(html) // {size: 15441, lines: 154}
+      const regex = new RegExp('.*/', 'g')
+      let fileName = repository.replace(regex, '').split('.')
+      const fileExtension = fileName[fileName.length - 1]
+      return { ...this.getFileInfo(html), ext: fileExtension } // {ext: 'py', size: 15441, lines: 154}
     }
+  }
 
-  } 
+  // { py: { size: 15441, lines: 154 } }
+  // { ext: py, size: 15441, lines: 154 }
 
   async scrapeRecursive(hrefs) {
     const regex = new RegExp('.*/', 'g')
-    if (Array.isArray(hrefs)) { 
+   
       for (const href of hrefs) {
-        this.scrapeRecursive(href)
+        const fileInfo = await this.scrapeToken(hrefs)
+        if (Array.isArray(fileInfo)) {
+          this.scrapeRecursive(href)
+        } else {
+          this.scrapeList.push({ fileName: fileInfo })
+        }
       }
-    } else {
-      let fileName = hrefs.replace(regex, '').split('.')
-      const fileExtension = fileName[fileName.length - 1]
-      const fileInfo = await this.scrapeToken(hrefs)
-      this.scrapeList.push({ fileName: fileInfo })
+      // let fileName = hrefs.replace(regex, '').split('.')
+      // const fileExtension = fileName[fileName.length - 1]
+      // const fileInfo = await this.scrapeToken(hrefs)
+      // this.scrapeList.push({ fileName: fileInfo })
       // if (!this.extensions[fileExtension]) this.extensions[fileExtension] = fileInfo
       // else {
       //   this.extensions[fileExtension].size += fileInfo.size
       //   this.extensions[fileExtension].lines += fileInfo.lines
       // }
-    }
   }
 
   // async scrapeRecursive(hrefs) {
@@ -135,13 +143,28 @@ export default class Scraper {
   //   }
   // }
 
+  async buildScrapeList(repository) { // repository = href singular
+    const html = await this.getHtml(repository)
+    const hrefs = await this.getHREFS(html)
+    // return {hrefs, repository}
+    if (hrefs) {
+      return hrefs
+    } else {
+      const regex = new RegExp('.*/', 'g')
+      let fileName = repository.replace(regex, '').split('.')
+      const fileExtension = fileName[fileName.length - 1]
+      return { ...this.getFileInfo(html), ext: fileExtension } // {ext: 'py', size: 15441, lines: 154}
+    }
+  }
+
   async scrape() {
     // let scrapeResult = {} // { py: { lines: 12, bytes: 35 } }
-    const html = await this.getHtml(this.repository)
-    const hrefs = await this.getHREFS(html)
+    // const html = await this.getHtml(this.repository)
+    // const hrefs = await this.getHREFS(html)
     // const tokens = await this.getTokens(hrefs)
     // console.log(hrefs);
     const teste = await this.scrapeRecursive(hrefs)
+    return teste
     return this.scrapeList
     return this.extensions
   }
