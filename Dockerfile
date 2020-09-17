@@ -8,5 +8,5 @@ RUN chown -R app:app $HOME/*
 
 USER root
 WORKDIR $HOME
-RUN npm i -g @adonisjs/cli
+RUN npm install -g nodemon
 RUN npm install

@@ -1,0 +1,19 @@
+version: '3.2'
+services:
+  api:
+    container_name:  "main_api"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh ./docker-start.sh
+    environment:
+      - NODE_ENV=dev
+    volumes:
+      - .:/home/app
+      - /home/app/node_modules
+    ports:
+      - "3000:3000"
+
+networks:
+  default:
+    driver: bridge
