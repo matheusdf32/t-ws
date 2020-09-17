@@ -15,10 +15,10 @@ app.get('/', async (req, res) => {
   res.json({
     status: 'Scraping ' + req.query.repository,
     date: new Date(),
-    result
+    ...result
   })
 })
 
 app.listen(port, () => {
-  console.log(`Server up! http://localhost:${port}`)
+  console.log(`Server up! http://localhost:${port}`) // Rocketseat/react-native-template-rocketseat-basic
 })

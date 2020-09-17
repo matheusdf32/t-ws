@@ -62,7 +62,7 @@ export default class Scraper {
       const regex = new RegExp('.*/', 'g')
       let fileName = repository.replace(regex, '').split('.')
       const fileExtension = fileName[fileName.length - 1]
-      return { ...this.getFileInfo(html), ext: fileExtension } 
+      return { ...this.getFileInfo(html), ext: fileExtension }
     }
   }
 
@@ -119,23 +119,21 @@ export default class Scraper {
       }
       // this.scrapeList.push({ [fileExtension]: { ...this.getFileInfo(html) } })  // {ext: 'py', size: 15441, lines: 154}
     }
-    return {...this.extensions}
+    return { ...this.extensions }
   }
 
   async scrape() {
-    console.log("teste iniciado");
-    // const teste = await this.buildScrapeList(this.repository)
-    return await this.buildScrapeExtensions(this.repository)
-    // return teste
-    // return this.scrapeList
+    console.log("Scraping " + this.repository);
+    const timer = Date.now()
+    let result = await this.buildScrapeExtensions(this.repository)
+    console.log(`done in ${Date.now() - timer}ms with ${this.repository}`);
+    return {seconds: (Date.now() - timer)/1000, ...result,}
   }
 
   getFileInfo(html) {
-    // let html = await this.getHtml()
-    // 92 : /(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">\s*)(\S.*?)(?= lines)/
     const regex = new RegExp(/(?<=<div class="Box-header py-2 d-flex flex-column flex-shrink-0 flex-md-row flex-md-items-center">\s*)\S.*?(?<=div>)/, 'gs')
     const div = html.match(regex)[0]
-    const linesMatch = div.match(/(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">\s*)(\S.*?)(?= lines)/gs)
+    const linesMatch = div.match(/(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">.*><\/span>\s*)(\d)*(?= lines)|(?<=<div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">\s*)(\d.*)(?= lines)/gs)
     const lines = Number(linesMatch ? linesMatch[0] : 0);
     const sizeMatch = div.match(/(?<=.*<span class="file-info-divider"><\/span>\s*)\S.*?(?<=(.B).*)/gs)
     const size = sizeMatch ? this.getSizeInBytes(sizeMatch[0]) : 0;
