@@ -146,20 +146,19 @@ export default class Scraper {
   async buildScrapeList(repository) { // repository = href singular
     const html = await this.getHtml(repository)
     const hrefs = await this.getHREFS(html)
-    const list = []
     // return {hrefs, repository}
     if (hrefs) {
       for (const href of hrefs) {
-        list.push(await this.buildScrapeList(href))
+        this.scrapeList.push(await this.buildScrapeList(href))
       }
     } else {
       console.log(repository)
       const regex = new RegExp('.*/', 'g')
       let fileName = repository.replace(regex, '').split('.')
       const fileExtension = fileName[fileName.length - 1]
-      list.push({[fileExtension]: { ...this.getFileInfo(html) }})  // {ext: 'py', size: 15441, lines: 154}
+      this.scrapeList.push({[fileExtension]: { ...this.getFileInfo(html) }})  // {ext: 'py', size: 15441, lines: 154}
     }
-    return list
+    return [...this.scrapeList]
   }
 
   async scrape() {
@@ -169,7 +168,7 @@ export default class Scraper {
     // const tokens = await this.getTokens(hrefs)
     // console.log(hrefs);
     const teste = await this.buildScrapeList(this.repository)
-    return teste
+    // return teste
     return this.scrapeList
     return this.extensions
   }
