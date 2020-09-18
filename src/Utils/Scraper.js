@@ -61,11 +61,7 @@ export default class Scraper {
   }
 
   async scrape() {
-    console.log("Scraping " + this.repository);
-    const timer = Date.now()
-    let result = await this.scrapeRepository(this.repository)
-    console.log(`done in ${Date.now() - timer}ms with ${this.repository}`);
-    return { seconds: (Date.now() - timer) / 1000, ...result, }
+    return await this.scrapeRepository(this.repository)
   }
 
   getFileInfo(html) {

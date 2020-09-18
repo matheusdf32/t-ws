@@ -2,7 +2,11 @@ version: '3.2'
 services:
   api:
     container_name:  "main_api"
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/usr/src/app
     ports:
       - "3000:3000"
 

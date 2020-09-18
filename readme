@@ -1,1 +1,6 @@
-execute: nodemon --experimental-modules server.js
+
+
+Hello! This is Matheus Duarte Ferreira's challenge made for Trustly.
+
+To get the docker image up, use 'docker-compose up --build'
+

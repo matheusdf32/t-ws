@@ -9,7 +9,7 @@ app.get('/', async (req, res) => {
   if (!req.query.repository) return res.json({
     tutorial: 'use a get query named \'repository\' to pass the public github repository url(or folder)',
     complete_example: 'http://url.domain/?repository=matheusdf32/spotify-finder',
-    examples:[ 
+    examples: [
       '?repository=matheusdf32/spotify-finder',
       '?repository=Rocketseat/react-native-template-rocketseat-basic/tree/master/src'
     ],
@@ -33,7 +33,7 @@ app.get('/', async (req, res) => {
   res.json({
     status: 'Scraping ' + req.query.repository,
     date: new Date(),
-    ...result
+    result
   })
 })
 
