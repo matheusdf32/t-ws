@@ -2,8 +2,9 @@ import chai from 'chai'
 import Scraper from './src/Utils/Scraper.js'
 
 describe('testing matheusdf32/spotify-finder', () => {
+
   const scraper = new Scraper('matheusdf32/spotify-finder')
-  // console.log("Scraping " + this.repository);
+
   let html = ''
   it('Get the html file from the given repository', async () => {
     const res = await scraper.getHtml('matheusdf32/spotify-finder')
@@ -40,9 +41,5 @@ describe('testing matheusdf32/spotify-finder', () => {
     const result = await scraper.scrape()
     chai.expect(expectedResult).to.eql(result)
   }).timeout(90000);
-
-
-  // let result = await this.scrapeRepository(this.repository)
-  // console.log(`done in ${Date.now() - timer}ms with ${this.repository}`);
-  // return { seconds: (Date.now() - timer) / 1000, ...result, }
+  
 })
