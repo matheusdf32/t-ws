@@ -1,7 +1,7 @@
 import express from 'express'
 import Scraper from './src/Utils/Scraper.js'
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 80
 const app = express()
 
 app.get('/', async (req, res) => {
