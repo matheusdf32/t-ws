@@ -1,19 +1,16 @@
-#!/bin/bash
-
-echo "\n\n\nNpm install:"
+printf "\n\n\nNpm install:"
 npm install
-
-echo "\n\n\nCopy .env file:"
+printf "\n\n\nCopy .env file:"
 file="./.env.docker"
-if [ -f "$file" ]
+if [ -s "$file" ]
 then
-	echo "$file found."
+	printf "$file found."
 	cp $file ./.env
-	echo ".env created"
+	printf ".env created"
 else
-	echo "$file not found."
+	printf "$file not found.\n\n\n"
 	exit 1
 fi
 
-echo "\n\n\nStart node server:"
+printf "\n\n\nStart node server:"
 nodemon server.js

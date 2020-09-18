@@ -1,12 +1,16 @@
 FROM node:12.18.3
+  
+WORKDIR /app
 
-RUN useradd --user-group --create-home --shell /bin/false app
+COPY package*.json ./
 
-ENV HOME=/home/app
-COPY package.json $HOME/
-RUN chown -R app:app $HOME/*
-
-USER root
-WORKDIR $HOME
 RUN npm install -g nodemon
 RUN npm install
+
+COPY . .
+
+ENV PORT=3000
+
+EXPOSE 3000
+
+CMD [ "npm", "start" ]
