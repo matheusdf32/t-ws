@@ -1,6 +1,16 @@
-
+! ! !
 
 Hello! This is Matheus Duarte Ferreira's challenge made for Trustly.
 
 To get the docker image up, use 'docker-compose up --build'
 
+When you first build the docker image it will fun the test before the server is up.
+
+To use this API, you just need to pass a repository to a get query, there are examples if you open the main page (url.domain/)
+
+I really hope this is up for your standards.
+
+Thank you Trustly for the challenge, I actually had fun!
+
+
+<3
