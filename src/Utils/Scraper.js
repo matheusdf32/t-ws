@@ -10,11 +10,11 @@ export default class Scraper {
   async getHtml(repository) {
     return await axios.get(`https://github.com/${repository}`)
       .then(r => r.data.toString())
-      .catch(({response}) => { return { error: response.status || response.statusCode || 'response?', message: 'Github says: Too many requests.' } })
+      .catch(({ response }) => { return { error: response.status || response.statusCode || 'response?', message: 'Github says: Too many requests.' } })
   }
 
   async getHREFS(html) {
-    const regex = new RegExp('(?<=<a class="js-navigation-open link-gray-dark" title=".*" id=".*" href="/)(.*?)(?=">)', 'g')
+    const regex = new RegExp('(?<=<a class="js-navigation-open link-gray-dark"[^>]+ href="/)(.*?)(?=">)', 'g')
     this.hrefs = html.match(regex)
     return this.hrefs
   }
